@@ -24,9 +24,7 @@ public class UsuarioService {
     }
 
     public Usuario buscarUsuarioPorEmailESenha(String email, String senha) {
-        Usuario EmailDoUsuario = usuarioRepository.findByEmail(email);
-        Usuario SenhaDoUsuario = usuarioRepository.findBySenha(senha);
-        return EmailDoUsuario;
+        return usuarioRepository.findByEmailAndSenha(email, senha);
     }
 
     private Usuario buscarUsuarioPorEmail(String email) {

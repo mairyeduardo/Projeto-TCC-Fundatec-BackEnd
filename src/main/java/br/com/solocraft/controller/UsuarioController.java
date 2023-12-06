@@ -20,18 +20,18 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    @GetMapping
+    @GetMapping("/listartodos")
     public ResponseEntity<List<Usuario>> listarUsuarios() {
         return ResponseEntity.ok(this.usuarioService.buscarTodosUsuarios());
     }
 
-    @PostMapping()
+    @PostMapping("/adicionar")
     public ResponseEntity<Void> adicionarUsuario(@RequestBody UsuarioRequestDTO usuarioRequestDTO) {
         usuarioService.cadastrarUsuario(usuarioRequestDTO);
         return new ResponseEntity<>(null, HttpStatus.CREATED);
     }
 
-    @GetMapping("/email={email}/senha={senha}")
+    @GetMapping("/email-e-senha/{email}/{senha}")
     public ResponseEntity<Usuario> buscarUsuarioPorEmailESenha(@PathVariable("email") String email,
                                                                @PathVariable("senha") String senha) {
         return ResponseEntity.ok(this.usuarioService.buscarUsuarioPorEmailESenha(email, senha));
