@@ -15,6 +15,8 @@ public class UsuarioService {
 
     private UsuarioRepository usuarioRepository;
 
+    private static final String ERRO_CRIACAO_EMAIL_EXISTENTE = "Não foi possivel cadastrar usuario, email já cadastrado";
+
     public UsuarioService(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
     }
@@ -36,8 +38,7 @@ public class UsuarioService {
         Usuario usuarioExistente = buscarUsuarioPorEmail(verificarEmailUsuarioASerAdicionado);
         if (usuarioExistente != null) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Não foi possivel cadastrar usuario, email: " + verificarEmailUsuarioASerAdicionado + " já cadastrado"
+                    HttpStatus.BAD_REQUEST, ERRO_CRIACAO_EMAIL_EXISTENTE
             );
         } else {
             Usuario usuarioEntity = UsuarioConverter.converterParaEntidade(usuarioRequestDTO);
