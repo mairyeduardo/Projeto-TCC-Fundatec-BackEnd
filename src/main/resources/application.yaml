@@ -7,14 +7,17 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:mem:solocraft
-    driver-class-name: org.h2.Driver
-    username: admin
-    password: 123456
+    url: jdbc:mysql://localhost:3306/solocraft
+    username: root
+    password: '@fundatec'
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    test-while-idle: true
+    validation-query: SELECT 1
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    defer-datasource-initialization: true
     show-sql: true
-  h2:
-    console:
-      enabled: true
+    hibernate:
+      ddl-auto: update
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
