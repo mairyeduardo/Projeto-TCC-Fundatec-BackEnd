@@ -31,6 +31,11 @@ public class UsuarioService {
         return usuarioRepository.findByEmailAndSenha(email, senha);
     }
 
+    public Usuario buscarUsuarioPorId(Long id) {
+        var usuario = usuarioRepository.findById(id);
+        return usuario.orElse(null);
+    }
+
     private Usuario buscarUsuarioPorEmail(String email) {
         return usuarioRepository.findByEmail(email);
     }
@@ -50,7 +55,7 @@ public class UsuarioService {
 
     public UsuarioResponseDTO removerPorId(Long id) {
 
-        Usuario usuarioASerRemovido = usuarioRepository.findById(id).get();
+        Usuario usuarioASerRemovido = buscarUsuarioPorId(id);
 
         if (usuarioASerRemovido == null) {
             throw new ResponseStatusException(
