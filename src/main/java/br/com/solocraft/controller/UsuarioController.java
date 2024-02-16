@@ -2,6 +2,7 @@ package br.com.solocraft.controller;
 
 import br.com.solocraft.model.Usuario;
 import br.com.solocraft.model.dto.UsuarioRequestDTO;
+import br.com.solocraft.model.dto.UsuarioResponseDTO;
 import br.com.solocraft.service.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -35,6 +36,12 @@ public class UsuarioController {
     public ResponseEntity<Usuario> buscarUsuarioPorEmailESenha(@PathVariable("email") String email,
                                                                @PathVariable("senha") String senha) {
         return ResponseEntity.ok(this.usuarioService.buscarUsuarioPorEmailESenha(email, senha));
+    }
+
+    @DeleteMapping("/deletar/{id}")
+    public ResponseEntity<UsuarioResponseDTO> removerUsuarioPorId(@PathVariable("id") Long id) {
+        UsuarioResponseDTO usuarioRemovido = usuarioService.removerPorId(id);
+        return ResponseEntity.ok(usuarioRemovido);
     }
 
 }

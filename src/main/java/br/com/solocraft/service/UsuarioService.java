@@ -2,6 +2,7 @@ package br.com.solocraft.service;
 
 import br.com.solocraft.model.Usuario;
 import br.com.solocraft.model.dto.UsuarioRequestDTO;
+import br.com.solocraft.model.dto.UsuarioResponseDTO;
 import br.com.solocraft.model.dto.converter.UsuarioConverter;
 import br.com.solocraft.repository.UsuarioRepository;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuarioService {
@@ -41,15 +43,30 @@ public class UsuarioService {
                     HttpStatus.BAD_REQUEST, ERRO_CRIACAO_EMAIL_EXISTENTE
             );
         } else {
-            Usuario usuarioEntity = UsuarioConverter.converterParaEntidade(usuarioRequestDTO);
+            Usuario usuarioEntity = UsuarioConverter.converterDTOParaEntidade(usuarioRequestDTO);
             usuarioRepository.save(usuarioEntity);
         }
     }
 
-    public Usuario alterarSenha(Long id, Usuario usuario) {
-        Usuario usuarioBuscadoNoBanco = usuarioRepository.findById(id).get();
-        usuarioBuscadoNoBanco.setSenha(usuario.getSenha());
-        usuarioRepository.save(usuarioBuscadoNoBanco);
-        return usuarioBuscadoNoBanco;
+    public UsuarioResponseDTO removerPorId(Long id) {
+
+        Usuario usuarioASerRemovido = usuarioRepository.findById(id).get();
+
+        if (usuarioASerRemovido == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é possivel remover, Usuario de id: " +id+ " não cadastrado no banco de dados.");
+        } else {
+            UsuarioResponseDTO usuarioResponseDTO = UsuarioConverter.converterEntidadeParaDTO(usuarioASerRemovido);
+            usuarioRepository.delete(usuarioASerRemovido);
+            return usuarioResponseDTO;
+        }
     }
+
+//    public Usuario alterarSenha(Long id, Usuario usuario) {
+//        Usuario usuarioBuscadoNoBanco = usuarioRepository.findById(id).get();
+//        usuarioBuscadoNoBanco.setSenha(usuario.getSenha());
+//        usuarioRepository.save(usuarioBuscadoNoBanco);
+//        return usuarioBuscadoNoBanco;
+//    }
 }
