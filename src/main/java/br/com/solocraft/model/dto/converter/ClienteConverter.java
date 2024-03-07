@@ -11,6 +11,7 @@ public class ClienteConverter {
 
     public static Cliente converterDTOParaEntidade(ClienteRequestDTO clienteRequestDTO, Usuario usuario){
         Cliente clienteEntity = new Cliente();
+
         clienteEntity.setUsuario(usuario);
         clienteEntity.setNome(clienteRequestDTO.getNome());
         clienteEntity.setTelefone(clienteRequestDTO.getTelefone());
@@ -22,8 +23,11 @@ public class ClienteConverter {
     public static ClienteResponseDTO converterEntidadeParaDTO(Cliente cliente){
         ClienteResponseDTO clienteResponseDTO = new ClienteResponseDTO();
 
-        //TODO falta inserir os dtos
-
+        clienteResponseDTO.setId(cliente.getId());
+        clienteResponseDTO.setIdUsuario(cliente.getUsuario().getId());
+        clienteResponseDTO.setNome(cliente.getNome());
+        clienteResponseDTO.setTelefone(cliente.getTelefone());
+        clienteResponseDTO.setEnderecoPrincipal(cliente.getEnderecoPrincipal());
 
         return clienteResponseDTO;
     }

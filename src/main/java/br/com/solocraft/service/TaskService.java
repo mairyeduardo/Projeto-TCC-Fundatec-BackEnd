@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -18,30 +20,35 @@ public class TaskService {
     private TaskRepository taskRepository;
     public  UsuarioService usuarioService;
     public ClienteService clienteService;
-    public TaskConverter taskConverter;
 
-    public TaskService (TaskRepository taskRepository, UsuarioService usuarioService, ClienteService clienteService, TaskConverter taskConverter) {
+    public TaskService (TaskRepository taskRepository, UsuarioService usuarioService, ClienteService clienteService) {
         this.taskRepository = taskRepository;
         this.usuarioService = usuarioService;
         this.clienteService = clienteService;
-        this.taskConverter = taskConverter;
     }
 
-    public Task buscarTarefaPorTitulo (String titulo) {
-        return taskRepository.findByTitulo(titulo);
+    public List<TaskResponseDTO> buscarTodasTarefas() {
+        List<Task> tarefas = taskRepository.findAll();
+        List<TaskResponseDTO> taskResponse = new ArrayList<>();
+
+        for (Task t : tarefas) {
+            taskResponse.add(TaskConverter.converterEntidadeParaDTO(t));
+        }
+        return taskResponse;
     }
 
     public TaskResponseDTO adicionarServico(TaskRequestDTO taskRequestDTO) {
 
-        var verificandoClienteExistente = clienteService.buscarClientePorNome(taskRequestDTO.getCliente().getNome());
+        var buscandoClienteBanco = clienteService.buscarClientePorNome(taskRequestDTO.getCliente().getNome());
         var usuario  = usuarioService.buscarUsuarioPorId(taskRequestDTO.getIdUsuario());
 
         String tituloASerAdicionado = taskRequestDTO.getTitulo();
         BigDecimal valorDoServico = taskRequestDTO.getValorServico();
-        var clienteAdicionadoATarefa = taskRequestDTO.getCliente();
+        BigDecimal valorInicial = taskRequestDTO.getCustoInicial();
 
-        if (clienteAdicionadoATarefa != verificandoClienteExistente) {
-            clienteService.cadastrarCliente(clienteAdicionadoATarefa);
+
+        if (Objects.isNull(buscandoClienteBanco)) {
+            clienteService.cadastrarCliente(taskRequestDTO.getCliente());
         }
 
         if (Objects.isNull(valorDoServico)){
@@ -66,12 +73,10 @@ public class TaskService {
             );
         }
 
-        Task task = taskConverter.converterDTOParaEntidade(taskRequestDTO, usuario);
+        Task task = TaskConverter.converterDTOParaEntidade(taskRequestDTO, usuario);
         taskRepository.save(task);
 
-        return taskConverter.converterEntidadeParaDTO(task);
+        return TaskConverter.converterEntidadeParaDTO(task);
     }
-
-
 
 }
