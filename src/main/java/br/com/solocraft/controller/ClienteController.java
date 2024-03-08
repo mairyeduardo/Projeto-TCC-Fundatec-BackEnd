@@ -1,9 +1,24 @@
 package br.com.solocraft.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import br.com.solocraft.model.Cliente;
+import br.com.solocraft.service.ClienteService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/cliente")
 public class ClienteController {
+
+    private ClienteService clienteService;
+
+    public ClienteController(ClienteService clienteService){
+        this.clienteService = clienteService;
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<Cliente>> listarClientes() {
+        return ResponseEntity.ok(this.clienteService.buscarCliente());
+    }
 }
