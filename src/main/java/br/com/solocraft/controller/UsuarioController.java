@@ -33,7 +33,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/email-e-senha/{email}/{senha}")
-    public ResponseEntity<Usuario> buscarUsuarioPorEmailESenha(@PathVariable("email") String email,
+    public ResponseEntity<UsuarioResponseDTO> buscarUsuarioPorEmailESenha(@PathVariable("email") String email,
                                                                @PathVariable("senha") String senha) {
         return ResponseEntity.ok(this.usuarioService.buscarUsuarioPorEmailESenha(email, senha));
     }
