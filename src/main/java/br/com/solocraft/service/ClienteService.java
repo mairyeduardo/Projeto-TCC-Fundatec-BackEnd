@@ -27,6 +27,10 @@ public class ClienteService {
     }
 
     public Cliente buscarClientePorNome(String nome) {
+
+        //TODO FAZER VALIDACAO SE NOME EXISTE
+//        Cliente cliente =
+
         return clienteRepository.findByNome(nome);
     }
 

@@ -21,4 +21,9 @@ public class ClienteController {
     public ResponseEntity<List<Cliente>> listarClientes() {
         return ResponseEntity.ok(this.clienteService.buscarCliente());
     }
+
+    @GetMapping("/{nome}")
+    public ResponseEntity<Cliente> buscarClientePorNome(@PathVariable("nome") String nome){
+        return ResponseEntity.ok(this.clienteService.buscarClientePorNome(nome));
+    }
 }
