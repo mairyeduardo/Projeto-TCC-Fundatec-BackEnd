@@ -25,6 +25,15 @@ public class UsuarioService {
     }
 
     public List<Usuario> buscarTodosUsuarios() {
+
+        List<Usuario> buscaDeUsuarios = usuarioRepository.findAll();
+
+        if (buscaDeUsuarios.isEmpty()) {
+         throw new ResponseStatusException(
+           HttpStatus.BAD_REQUEST, "Não existem usuarios cadastrados"
+         );
+        }
+
         return usuarioRepository.findAll();
     }
 
@@ -33,10 +42,10 @@ public class UsuarioService {
         Usuario usuarioBanco = usuarioRepository.findByEmailAndSenha(email, senha);
 
         if (Objects.isNull(usuarioBanco)) {
-                throw new ResponseStatusException(
-                  HttpStatus.BAD_REQUEST,
-                  "Falha no Login, dados invalidos."
-                );
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Falha no Login, dados invalidos."
+            );
         }
 
         UsuarioResponseDTO userDTO = UsuarioConverter.converterEntidadeParaDTO(usuarioBanco);
