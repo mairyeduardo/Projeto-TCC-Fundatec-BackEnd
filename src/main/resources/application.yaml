@@ -9,7 +9,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/solocraft
     username: root
-    password: '200102eduardo'
+    password: '@fundatec'
     driver-class-name: com.mysql.cj.jdbc.Driver
     test-while-idle: true
     validation-query: SELECT 1

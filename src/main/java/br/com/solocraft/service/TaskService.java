@@ -2,8 +2,11 @@ package br.com.solocraft.service;
 
 import br.com.solocraft.model.Cliente;
 import br.com.solocraft.model.Task;
+import br.com.solocraft.model.dto.ClienteRequestDTO;
+import br.com.solocraft.model.dto.ClienteResponseDTO;
 import br.com.solocraft.model.dto.TaskRequestDTO;
 import br.com.solocraft.model.dto.TaskResponseDTO;
+import br.com.solocraft.model.dto.converter.ClienteConverter;
 import br.com.solocraft.model.dto.converter.TaskConverter;
 import br.com.solocraft.repository.TaskRepository;
 import org.springframework.http.HttpStatus;
@@ -49,6 +52,9 @@ public class TaskService {
         LocalDate dataInicio = taskRequestDTO.getDataInicio();
         String enderecoServico = taskRequestDTO.getEnderecoServico();
         Cliente clienteTask = taskRequestDTO.getCliente();
+        String nomeCliente = taskRequestDTO.getCliente().getNome();
+
+        Cliente buscarClienteExistente = clienteService.buscarClientePorNome(nomeCliente);
 
         if (Objects.isNull(usuario)) {
             throw new ResponseStatusException(
@@ -104,6 +110,10 @@ public class TaskService {
                     HttpStatus.BAD_REQUEST,
                     "Insira um cliente relacionado ao serviço."
             );
+        }
+
+        if (Objects.isNull(buscarClienteExistente)){
+             clienteService.cadastrarCliente(clienteTask);
         }
 
         Task task = TaskConverter.converterDTOParaEntidade(taskRequestDTO, usuario);

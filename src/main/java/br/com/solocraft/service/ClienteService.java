@@ -60,9 +60,22 @@ public class ClienteService {
                 );
             }
 
+            if (Objects.isNull(nomeNovoCliente)) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Não é possivel cadastrar cliente, insira um nome de usuario válido."
+                );
+            }
+
             if (nomeClienteExistente != null) {
                 throw new ResponseStatusException(
-                        HttpStatus.BAD_REQUEST, "Não foi possivel cadastrar novo cliente, um cliente com este nome já está cadastrado"
+                        HttpStatus.BAD_REQUEST, "Não foi possivel cadastrar novo cliente, um cliente com este nome já está cadastrado."
+                );
+            }
+
+            if (Objects.isNull(telefoneNovoCliente)) {
+                throw new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST, "Não foi possivel cadastrar novo cliente, Insira um telefone válido."
                 );
             }
 
