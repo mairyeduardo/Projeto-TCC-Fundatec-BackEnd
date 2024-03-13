@@ -1,5 +1,6 @@
 package br.com.solocraft.service;
 
+import br.com.solocraft.model.Task;
 import br.com.solocraft.model.Usuario;
 import br.com.solocraft.model.dto.UsuarioRequestDTO;
 import br.com.solocraft.model.dto.UsuarioResponseDTO;
@@ -9,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -23,12 +26,37 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public List<Usuario> buscarTodosUsuarios() {
-        return usuarioRepository.findAll();
+    public List<UsuarioResponseDTO> buscarTodosUsuarios() {
+
+        List<Usuario> buscaDeUsuarios = usuarioRepository.findAll();
+        List<UsuarioResponseDTO> usuarioResponse = new ArrayList<>();
+
+        for (Usuario u: buscaDeUsuarios) {
+            usuarioResponse.add(UsuarioConverter.converterEntidadeParaDTO(u));
+        }
+
+        if (usuarioResponse.isEmpty()) {
+         throw new ResponseStatusException(
+           HttpStatus.BAD_REQUEST, "Não existem usuarios cadastrados"
+         );
+        }
+
+        return usuarioResponse;
     }
 
-    public Usuario buscarUsuarioPorEmailESenha(String email, String senha) {
-        return usuarioRepository.findByEmailAndSenha(email, senha);
+    public UsuarioResponseDTO buscarUsuarioPorEmailESenha(String email, String senha) {
+
+        Usuario usuarioBanco = usuarioRepository.findByEmailAndSenha(email, senha);
+
+        if (Objects.isNull(usuarioBanco)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Falha no Login, dados invalidos."
+            );
+        }
+
+        UsuarioResponseDTO userDTO = UsuarioConverter.converterEntidadeParaDTO(usuarioBanco);
+        return userDTO;
     }
 
     public Usuario buscarUsuarioPorId(Long id) {
@@ -60,7 +88,7 @@ public class UsuarioService {
         if (usuarioASerRemovido == null) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Não é possivel remover, Usuario de id: " +id+ " não cadastrado no banco de dados.");
+                    "Não é possivel remover, Usuario de id: " + id + " não cadastrado no banco de dados.");
         } else {
             UsuarioResponseDTO usuarioResponseDTO = UsuarioConverter.converterEntidadeParaDTO(usuarioASerRemovido);
             usuarioRepository.delete(usuarioASerRemovido);
@@ -68,10 +96,4 @@ public class UsuarioService {
         }
     }
 
-//    public Usuario alterarSenha(Long id, Usuario usuario) {
-//        Usuario usuarioBuscadoNoBanco = usuarioRepository.findById(id).get();
-//        usuarioBuscadoNoBanco.setSenha(usuario.getSenha());
-//        usuarioRepository.save(usuarioBuscadoNoBanco);
-//        return usuarioBuscadoNoBanco;
-//    }
 }

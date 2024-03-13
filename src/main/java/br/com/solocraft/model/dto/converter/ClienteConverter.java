@@ -31,4 +31,17 @@ public class ClienteConverter {
 
         return clienteResponseDTO;
     }
+
+    public static ClienteRequestDTO converterResponseParaRequest(ClienteResponseDTO clienteResponseDTO){
+        ClienteRequestDTO clienteRequestDTO = new ClienteRequestDTO();
+
+        clienteRequestDTO.setIdUsuario(clienteResponseDTO.getIdUsuario());
+        clienteRequestDTO.setNome(clienteResponseDTO.getNome());
+        clienteRequestDTO.setTelefone(clienteResponseDTO.getTelefone());
+        clienteRequestDTO.setEnderecoPrincipal(clienteResponseDTO.getEnderecoPrincipal());
+
+
+        return clienteRequestDTO;
+    }
+
 }
