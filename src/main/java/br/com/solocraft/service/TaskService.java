@@ -139,7 +139,7 @@ public class TaskService {
 
     public TaskResponseDTO finalizarTarefaPorId(Long id){
         Task taskASerAlterada = buscarTaskPorId(id);
-        String statusAtual = taskASerAlterada.getStatusPedido();
+        String statusAtual = taskASerAlterada.getStatusTarefa();
 
         if (Objects.isNull(taskASerAlterada)) {
             throw new ResponseStatusException(
@@ -154,7 +154,7 @@ public class TaskService {
             );
         }
 
-        taskASerAlterada.setStatusPedido("Finalizado");
+        taskASerAlterada.setStatusTarefa("Finalizado");
         taskASerAlterada.setDataFinal(LocalDate.now());
         taskRepository.save(taskASerAlterada);
 

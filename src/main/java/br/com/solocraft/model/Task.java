@@ -32,7 +32,7 @@ public class Task {
     @Column
     private String enderecoServico;
     @Column
-    private String statusPedido;
+    private String statusTarefa;
     @ManyToOne
     @JoinColumn(name = "id_cliente", referencedColumnName = "id")
     private Cliente cliente;
