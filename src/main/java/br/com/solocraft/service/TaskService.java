@@ -139,11 +139,19 @@ public class TaskService {
 
     public TaskResponseDTO finalizarTarefaPorId(Long id){
         Task taskASerAlterada = buscarTaskPorId(id);
+        String statusAtual = taskASerAlterada.getStatusPedido();
 
         if (Objects.isNull(taskASerAlterada)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Não é possivel Finalizar Tarefa, Nao foi encontrada tarefa com id: " + id );
+        }
+
+        if (!statusAtual.equals("Em_Progresso")) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é possivel Finalizar uma tarefa que não está em progresso"
+            );
         }
 
         taskASerAlterada.setStatusPedido("Finalizado");
