@@ -45,16 +45,7 @@ public class TaskService {
     public TaskResponseDTO adicionarServico(TaskRequestDTO taskRequestDTO) {
 
         var usuario = usuarioService.buscarUsuarioPorId(taskRequestDTO.getIdUsuario());
-
-        String tituloASerAdicionado = taskRequestDTO.getTitulo();
-        BigDecimal valorDoServico = taskRequestDTO.getValorServico();
-        BigDecimal valorInicial = taskRequestDTO.getCustoInicial();
-        LocalDate dataInicio = taskRequestDTO.getDataInicio();
-        String enderecoServico = taskRequestDTO.getEnderecoServico();
-        Cliente clienteTask = taskRequestDTO.getCliente();
-        String nomeCliente = taskRequestDTO.getCliente().getNome();
-
-        Cliente buscarClienteExistente = clienteService.buscarClientePorNome(nomeCliente);
+        Cliente buscarClienteExistente = clienteService.buscarClientePorNome(taskRequestDTO.getCliente().getNome());
 
         if (Objects.isNull(usuario)) {
             throw new ResponseStatusException(
@@ -63,49 +54,49 @@ public class TaskService {
             );
         }
 
-        if (Objects.isNull(tituloASerAdicionado)) {
+        if (Objects.isNull(taskRequestDTO.getTitulo())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Insira um titulo para o serviço."
             );
         }
 
-        if (Objects.isNull(valorDoServico)) {
+        if (Objects.isNull(taskRequestDTO.getValorServico())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Insira um Orçamento para o serviço."
             );
         }
 
-        if (Objects.isNull(valorInicial)) {
+        if (Objects.isNull(taskRequestDTO.getCustoInicial())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Insira um Valor Inicial para o serviço."
             );
         }
 
-        if (Objects.isNull(dataInicio)) {
+        if (Objects.isNull(taskRequestDTO.getDataInicio())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Insira uma Data Inicial para o serviço."
             );
         }
 
-        if (dataInicio.isBefore(LocalDate.now())) {
+        if (taskRequestDTO.getDataInicio().isBefore(LocalDate.now())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "A data inicial inserida é invalida, informe uma data futura."
             );
         }
 
-        if (Objects.isNull(enderecoServico)) {
+        if (Objects.isNull(taskRequestDTO.getEnderecoServico())) {
             throw new ResponseStatusException(
               HttpStatus.BAD_REQUEST,
               "Insira um endereco relacionado ao serviço."
             );
         }
 
-        if (Objects.isNull(clienteTask)) {
+        if (Objects.isNull(taskRequestDTO.getCliente())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Insira um cliente relacionado ao serviço."
@@ -113,7 +104,11 @@ public class TaskService {
         }
 
         if (Objects.isNull(buscarClienteExistente)){
-             clienteService.cadastrarCliente(clienteTask);
+            var cliente = taskRequestDTO.getCliente();
+            cliente.setUsuario(usuario);
+            clienteService.cadastrarCliente(cliente);
+        } else {
+            taskRequestDTO.setCliente(buscarClienteExistente);
         }
 
         Task task = TaskConverter.converterDTOParaEntidade(taskRequestDTO, usuario);
