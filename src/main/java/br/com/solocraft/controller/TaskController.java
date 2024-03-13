@@ -33,4 +33,10 @@ public class TaskController {
         TaskResponseDTO taskRemovido = taskService.removerPorId(id);
         return ResponseEntity.ok(taskRemovido);
     }
+
+    @PutMapping("/finalizar/{id}")
+    public ResponseEntity<TaskResponseDTO> finalizarTarefaPorId(@PathVariable("id") Long id) {
+        TaskResponseDTO taskFinalizada = taskService.finalizarTarefaPorId(id);
+        return ResponseEntity.ok(taskFinalizada);
+    }
 }

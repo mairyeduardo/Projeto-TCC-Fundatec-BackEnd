@@ -137,4 +137,21 @@ public class TaskService {
         return TaskConverter.converterEntidadeParaDTO(task);
     }
 
+    public TaskResponseDTO finalizarTarefaPorId(Long id){
+        Task taskASerAlterada = buscarTaskPorId(id);
+
+        if (Objects.isNull(taskASerAlterada)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é possivel Finalizar Tarefa, Nao foi encontrada tarefa com id: " + id );
+        }
+
+        taskASerAlterada.setStatusPedido("Finalizado");
+        taskASerAlterada.setDataFinal(LocalDate.now());
+        taskRepository.save(taskASerAlterada);
+
+
+        return TaskConverter.converterEntidadeParaDTO(taskASerAlterada);
+    }
+
 }
