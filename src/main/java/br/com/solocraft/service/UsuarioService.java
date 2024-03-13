@@ -1,5 +1,6 @@
 package br.com.solocraft.service;
 
+import br.com.solocraft.model.Task;
 import br.com.solocraft.model.Usuario;
 import br.com.solocraft.model.dto.UsuarioRequestDTO;
 import br.com.solocraft.model.dto.UsuarioResponseDTO;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -24,17 +26,22 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public List<Usuario> buscarTodosUsuarios() {
+    public List<UsuarioResponseDTO> buscarTodosUsuarios() {
 
         List<Usuario> buscaDeUsuarios = usuarioRepository.findAll();
+        List<UsuarioResponseDTO> usuarioResponse = new ArrayList<>();
 
-        if (buscaDeUsuarios.isEmpty()) {
+        for (Usuario u: buscaDeUsuarios) {
+            usuarioResponse.add(UsuarioConverter.converterEntidadeParaDTO(u));
+        }
+
+        if (usuarioResponse.isEmpty()) {
          throw new ResponseStatusException(
            HttpStatus.BAD_REQUEST, "Não existem usuarios cadastrados"
          );
         }
 
-        return usuarioRepository.findAll();
+        return usuarioResponse;
     }
 
     public UsuarioResponseDTO buscarUsuarioPorEmailESenha(String email, String senha) {

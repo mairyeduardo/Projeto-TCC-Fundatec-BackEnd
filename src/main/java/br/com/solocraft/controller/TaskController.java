@@ -27,4 +27,10 @@ public class TaskController {
     public ResponseEntity<List<TaskResponseDTO>> listarTarefas() {
         return ResponseEntity.ok(this.taskService.buscarTodasTarefas());
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<TaskResponseDTO> removerTarefaPorId(@PathVariable("id") Long id) {
+        TaskResponseDTO taskRemovido = taskService.removerPorId(id);
+        return ResponseEntity.ok(taskRemovido);
+    }
 }

@@ -42,6 +42,26 @@ public class TaskService {
         return taskResponse;
     }
 
+    public Task buscarTaskPorId(Long id) {
+        var task = taskRepository.findById(id);
+        return task.orElse(null);
+    }
+
+    public TaskResponseDTO removerPorId(Long id) {
+
+        Task taskASerRemovido = buscarTaskPorId(id);
+
+        if (taskASerRemovido == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é possivel remover, Tarefa de id: " + id + " não cadastrado no banco de dados.");
+        } else {
+            TaskResponseDTO taskResponseDTO = TaskConverter.converterEntidadeParaDTO(taskASerRemovido);
+            taskRepository.delete(taskASerRemovido);
+            return taskResponseDTO;
+        }
+    }
+
     public TaskResponseDTO adicionarServico(TaskRequestDTO taskRequestDTO) {
 
         var usuario = usuarioService.buscarUsuarioPorId(taskRequestDTO.getIdUsuario());

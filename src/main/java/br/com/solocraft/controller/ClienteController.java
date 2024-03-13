@@ -1,6 +1,7 @@
 package br.com.solocraft.controller;
 
 import br.com.solocraft.model.Cliente;
+import br.com.solocraft.model.dto.ClienteResponseDTO;
 import br.com.solocraft.service.ClienteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,5 +26,11 @@ public class ClienteController {
     @GetMapping("/{nome}")
     public ResponseEntity<Cliente> buscarClientePorNome(@PathVariable("nome") String nome){
         return ResponseEntity.ok(this.clienteService.buscarClientePorNome(nome));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ClienteResponseDTO> removerClientePorId(@PathVariable("id") Long id) {
+        ClienteResponseDTO clienteRemovido = clienteService.removerPorId(id);
+        return ResponseEntity.ok(clienteRemovido);
     }
 }

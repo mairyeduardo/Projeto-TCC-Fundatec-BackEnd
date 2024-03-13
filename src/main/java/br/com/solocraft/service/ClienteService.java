@@ -1,17 +1,13 @@
 package br.com.solocraft.service;
 
 import br.com.solocraft.model.Cliente;
-import br.com.solocraft.model.Usuario;
-import br.com.solocraft.model.dto.ClienteRequestDTO;
-import br.com.solocraft.model.dto.UsuarioRequestDTO;
+import br.com.solocraft.model.dto.ClienteResponseDTO;
 import br.com.solocraft.model.dto.converter.ClienteConverter;
-import br.com.solocraft.model.dto.converter.UsuarioConverter;
 import br.com.solocraft.repository.ClienteRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,6 +20,11 @@ public class ClienteService {
     public ClienteService(ClienteRepository clienteRepository, UsuarioService usuarioService){
         this.clienteRepository = clienteRepository;
         this.usuarioService = usuarioService;
+    }
+
+    public Cliente buscarClientePorId(Long id) {
+        var cliente = clienteRepository.findById(id);
+        return cliente.orElse(null);
     }
 
     public Cliente buscarClientePorNome(String nome) {
@@ -87,4 +88,21 @@ public class ClienteService {
 
             clienteRepository.save(cliente);
     }
+
+    public ClienteResponseDTO removerPorId(Long id) {
+
+        Cliente clienteASerRemovido = buscarClientePorId(id);
+
+        if (clienteASerRemovido == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é possivel remover, Cliente de id: " + id + " não cadastrado no banco de dados.");
+        } else {
+            ClienteResponseDTO clienteResponseDTO = ClienteConverter.converterEntidadeParaDTO(clienteASerRemovido);
+            clienteRepository.delete(clienteASerRemovido);
+            return clienteResponseDTO;
+        }
+    }
+
+
 }
