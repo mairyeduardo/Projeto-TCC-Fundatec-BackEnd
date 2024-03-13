@@ -162,4 +162,23 @@ public class TaskService {
         return TaskConverter.converterEntidadeParaDTO(taskASerAlterada);
     }
 
+    public TaskResponseDTO adicionarCusto(Long id, TaskRequestDTO taskRequestDTO){
+        Task taskASerAlterada = buscarTaskPorId(id);
+
+        BigDecimal custoAtual = taskASerAlterada.getCustoInicial();
+        BigDecimal novoCusto = taskRequestDTO.getCustoSoma();
+
+        if (novoCusto.longValue() >= 0) {
+            custoAtual = custoAtual.add(novoCusto);
+            taskASerAlterada.setCustoInicial(custoAtual);
+            taskRepository.save(taskASerAlterada);
+        } else {
+            throw new ResponseStatusException(
+              HttpStatus.BAD_REQUEST, "Insira um valor maior que 0"
+            );
+        }
+
+        return TaskConverter.converterEntidadeParaDTO(taskASerAlterada);
+    }
+
 }

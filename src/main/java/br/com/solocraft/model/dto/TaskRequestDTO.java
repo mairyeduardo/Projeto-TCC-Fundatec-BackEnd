@@ -14,6 +14,7 @@ public class TaskRequestDTO {
     private String descricao;
     private BigDecimal valorServico;
     private BigDecimal custoInicial;
+    private BigDecimal custoSoma = null;
     private LocalDate dataInicio;
     private String enderecoServico;
     private Cliente cliente;

@@ -39,4 +39,10 @@ public class TaskController {
         TaskResponseDTO taskFinalizada = taskService.finalizarTarefaPorId(id);
         return ResponseEntity.ok(taskFinalizada);
     }
+
+    @PatchMapping("/custo/{id}")
+    public ResponseEntity<TaskResponseDTO> alterarCustoAtualPorId(@PathVariable("id") Long id, @RequestBody TaskRequestDTO taskRequestDTO) {
+        TaskResponseDTO taskAlterada = taskService.adicionarCusto(id, taskRequestDTO);
+        return ResponseEntity.ok(taskAlterada);
+    }
 }

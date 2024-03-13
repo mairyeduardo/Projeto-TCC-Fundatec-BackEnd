@@ -26,6 +26,8 @@ public class Task {
     @Column
     private BigDecimal custoInicial;
     @Column
+    private BigDecimal custoSoma = null;
+    @Column
     private LocalDate dataInicio;
     @Column
     private LocalDate dataFinal = null;
