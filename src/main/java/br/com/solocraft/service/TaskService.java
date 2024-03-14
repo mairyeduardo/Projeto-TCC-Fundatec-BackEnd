@@ -88,13 +88,6 @@ public class TaskService {
             );
         }
 
-        if (Objects.isNull(taskRequestDTO.getCustoInicial())) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Insira um Valor Inicial para o serviço."
-            );
-        }
-
         if (Objects.isNull(taskRequestDTO.getDataInicio())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -139,6 +132,7 @@ public class TaskService {
 
     public TaskResponseDTO finalizarTarefaPorId(Long id){
         Task taskASerAlterada = buscarTaskPorId(id);
+        String statusAtual = taskASerAlterada.getStatusTarefa();
 
         if (Objects.isNull(taskASerAlterada)) {
             throw new ResponseStatusException(
@@ -146,10 +140,50 @@ public class TaskService {
                     "Não é possivel Finalizar Tarefa, Nao foi encontrada tarefa com id: " + id );
         }
 
-        taskASerAlterada.setStatusPedido("Finalizado");
+        if (!statusAtual.equals("Em_Progresso")) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é possivel Finalizar uma tarefa que não está em progresso"
+            );
+        }
+
+        taskASerAlterada.setStatusTarefa("Finalizado");
         taskASerAlterada.setDataFinal(LocalDate.now());
         taskRepository.save(taskASerAlterada);
 
+
+        return TaskConverter.converterEntidadeParaDTO(taskASerAlterada);
+    }
+
+    public TaskResponseDTO adicionarCusto(Long id, TaskRequestDTO taskRequestDTO){
+        Task taskASerAlterada = buscarTaskPorId(id);
+        String statusAtual = taskASerAlterada.getStatusTarefa();
+
+        if (Objects.isNull(taskASerAlterada)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é possivel adicionar custo, Tarefa de id: " + id + " não cadastrado no banco de dados.");
+        }
+
+        if (!statusAtual.equals("Em_Progresso")) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é possivel Adicionar custo a uma tarefa que não está em progresso"
+            );
+        }
+
+        BigDecimal custoAtual = taskASerAlterada.getCustoAtual();
+        BigDecimal novoCusto = taskRequestDTO.getCustoSoma();
+
+        if (novoCusto.longValue() >= 0) {
+            custoAtual = custoAtual.add(novoCusto);
+            taskASerAlterada.setCustoAtual(custoAtual);
+            taskRepository.save(taskASerAlterada);
+        } else {
+            throw new ResponseStatusException(
+              HttpStatus.BAD_REQUEST, "Insira um valor maior que 0"
+            );
+        }
 
         return TaskConverter.converterEntidadeParaDTO(taskASerAlterada);
     }

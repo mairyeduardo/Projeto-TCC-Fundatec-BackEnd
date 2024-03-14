@@ -24,7 +24,9 @@ public class Task {
     @Column
     private BigDecimal valorServico;
     @Column
-    private BigDecimal custoInicial;
+    private BigDecimal custoAtual = BigDecimal.valueOf(00.00);
+    @Column
+    private BigDecimal custoSoma = null;
     @Column
     private LocalDate dataInicio;
     @Column
@@ -32,7 +34,7 @@ public class Task {
     @Column
     private String enderecoServico;
     @Column
-    private String statusPedido;
+    private String statusTarefa;
     @ManyToOne
     @JoinColumn(name = "id_cliente", referencedColumnName = "id")
     private Cliente cliente;
