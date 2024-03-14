@@ -24,7 +24,7 @@ public class Task {
     @Column
     private BigDecimal valorServico;
     @Column
-    private BigDecimal custoInicial;
+    private BigDecimal custoAtual = BigDecimal.valueOf(00.00);
     @Column
     private BigDecimal custoSoma = null;
     @Column

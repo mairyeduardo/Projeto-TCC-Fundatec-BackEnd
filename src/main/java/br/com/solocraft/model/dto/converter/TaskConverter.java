@@ -18,7 +18,7 @@ public class TaskConverter {
         taskEntity.setTitulo(taskRequestDTO.getTitulo());
         taskEntity.setDescricao(taskRequestDTO.getDescricao());
         taskEntity.setValorServico(taskRequestDTO.getValorServico());
-        taskEntity.setCustoInicial(taskRequestDTO.getCustoInicial());
+        taskEntity.setCustoAtual(taskRequestDTO.getCustoAtual());
         taskEntity.setCustoSoma(taskRequestDTO.getCustoSoma());
         taskEntity.setDataInicio(taskRequestDTO.getDataInicio());
         taskEntity.setEnderecoServico(taskRequestDTO.getEnderecoServico());
@@ -35,7 +35,7 @@ public class TaskConverter {
         taskResponseDTO.setTitulo(task.getTitulo());
         taskResponseDTO.setDescricao(task.getDescricao());
         taskResponseDTO.setValorServico(task.getValorServico());
-        taskResponseDTO.setCustoInicial(task.getCustoInicial());
+        taskResponseDTO.setCustoAtual(task.getCustoAtual());
         taskResponseDTO.setCustoSoma(task.getCustoSoma());
         taskResponseDTO.setDataInicio(task.getDataInicio());
         taskResponseDTO.setDataFinal(task.getDataFinal());

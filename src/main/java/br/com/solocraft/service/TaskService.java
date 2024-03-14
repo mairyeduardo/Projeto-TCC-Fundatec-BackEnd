@@ -88,13 +88,6 @@ public class TaskService {
             );
         }
 
-        if (Objects.isNull(taskRequestDTO.getCustoInicial())) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Insira um Valor Inicial para o serviço."
-            );
-        }
-
         if (Objects.isNull(taskRequestDTO.getDataInicio())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -164,13 +157,27 @@ public class TaskService {
 
     public TaskResponseDTO adicionarCusto(Long id, TaskRequestDTO taskRequestDTO){
         Task taskASerAlterada = buscarTaskPorId(id);
+        String statusAtual = taskASerAlterada.getStatusTarefa();
 
-        BigDecimal custoAtual = taskASerAlterada.getCustoInicial();
+        if (Objects.isNull(taskASerAlterada)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é possivel adicionar custo, Tarefa de id: " + id + " não cadastrado no banco de dados.");
+        }
+
+        if (!statusAtual.equals("Em_Progresso")) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é possivel Adicionar custo a uma tarefa que não está em progresso"
+            );
+        }
+
+        BigDecimal custoAtual = taskASerAlterada.getCustoAtual();
         BigDecimal novoCusto = taskRequestDTO.getCustoSoma();
 
         if (novoCusto.longValue() >= 0) {
             custoAtual = custoAtual.add(novoCusto);
-            taskASerAlterada.setCustoInicial(custoAtual);
+            taskASerAlterada.setCustoAtual(custoAtual);
             taskRepository.save(taskASerAlterada);
         } else {
             throw new ResponseStatusException(

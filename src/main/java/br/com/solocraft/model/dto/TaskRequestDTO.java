@@ -13,7 +13,7 @@ public class TaskRequestDTO {
     private String titulo;
     private String descricao;
     private BigDecimal valorServico;
-    private BigDecimal custoInicial;
+    private BigDecimal custoAtual = BigDecimal.valueOf(00.00);
     private BigDecimal custoSoma = null;
     private LocalDate dataInicio;
     private String enderecoServico;

@@ -18,7 +18,7 @@ public class TaskResponseDTO {
     private String titulo;
     private String descricao;
     private BigDecimal valorServico;
-    private BigDecimal custoInicial;
+    private BigDecimal custoAtual;
     private BigDecimal custoSoma = null;
     private LocalDate dataInicio;
     private LocalDate dataFinal = null;
