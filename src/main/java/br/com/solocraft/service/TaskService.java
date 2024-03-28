@@ -2,11 +2,9 @@ package br.com.solocraft.service;
 
 import br.com.solocraft.model.Cliente;
 import br.com.solocraft.model.Task;
-import br.com.solocraft.model.dto.ClienteRequestDTO;
-import br.com.solocraft.model.dto.ClienteResponseDTO;
-import br.com.solocraft.model.dto.TaskRequestDTO;
-import br.com.solocraft.model.dto.TaskResponseDTO;
+import br.com.solocraft.model.dto.*;
 import br.com.solocraft.model.dto.converter.ClienteConverter;
+import br.com.solocraft.model.dto.converter.RelatorioIndividualConverter;
 import br.com.solocraft.model.dto.converter.TaskConverter;
 import br.com.solocraft.repository.TaskRepository;
 import org.springframework.http.HttpStatus;
@@ -45,6 +43,42 @@ public class TaskService {
     public Task buscarTaskPorId(Long id) {
         var task = taskRepository.findById(id);
         return task.orElse(null);
+    }
+
+    public List<TaskResponseDTO> buscarTaskPorIdDoUsuario(Long id) {
+        var usuarioEncontrado = usuarioService.buscarUsuarioPorId(id);
+        List<Task> taskEncontrado = taskRepository.findByUsuario(usuarioEncontrado);
+        List<TaskResponseDTO> taskResponseDTO = new ArrayList<>();
+
+        if (taskEncontrado.isEmpty()){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Tarefa nao encontrado para usuario de id: " + id);
+        }
+
+        for (Task t: taskEncontrado) {
+            taskResponseDTO.add(TaskConverter.converterEntidadeParaDTO(t));
+        }
+
+        return taskResponseDTO;
+    }
+
+    public List<TaskResponseDTO> buscarTaskPorIdDoCliente(Long id) {
+        var clienteEncontrado = clienteService.buscarClientePorId(id);
+        List<Task> taskEncontrado = taskRepository.findByCliente(clienteEncontrado);
+        List<TaskResponseDTO> taskResponseDTO = new ArrayList<>();
+
+        if (taskEncontrado.isEmpty()){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Tarefa nao encontrado para cliente de id: " + id);
+        }
+
+        for (Task t: taskEncontrado) {
+            taskResponseDTO.add(TaskConverter.converterEntidadeParaDTO(t));
+        }
+
+        return taskResponseDTO;
     }
 
     public TaskResponseDTO removerPorId(Long id) {

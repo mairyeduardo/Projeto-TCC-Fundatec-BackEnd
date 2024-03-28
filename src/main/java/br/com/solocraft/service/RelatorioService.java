@@ -3,9 +3,7 @@ package br.com.solocraft.service;
 import br.com.solocraft.model.RelatorioIndividual;
 import br.com.solocraft.model.Task;
 import br.com.solocraft.model.dto.RelatorioIndividualResponseDTO;
-import br.com.solocraft.model.dto.TaskResponseDTO;
 import br.com.solocraft.model.dto.converter.RelatorioIndividualConverter;
-import br.com.solocraft.model.dto.converter.TaskConverter;
 import br.com.solocraft.repository.RelatorioIndividualRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,13 +19,47 @@ import java.util.Objects;
 @Service
 public class RelatorioService {
 
-    private TaskService taskService;
+    private final TaskService taskService;
 
-    private RelatorioIndividualRepository relatorioIndividualRepository;
+    private final RelatorioIndividualRepository relatorioIndividualRepository;
 
     public RelatorioService(TaskService taskService, RelatorioIndividualRepository relatorioIndividualRepository) {
         this.taskService = taskService;
         this.relatorioIndividualRepository = relatorioIndividualRepository;
+    }
+
+    public RelatorioIndividualResponseDTO buscarRelatorioPorIdDaTarefa(Long id) {
+        var tarefaEncontrada = taskService.buscarTaskPorId(id);
+        var relatorioEncontrado = relatorioIndividualRepository.findByTask(tarefaEncontrada);
+
+        if (Objects.isNull(relatorioEncontrado)){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Relatório nao encontrado para a tarefa de id: " + id);
+        }
+
+        return RelatorioIndividualConverter.converterEntidadeParaDTO(relatorioEncontrado);
+
+    }
+
+    public RelatorioIndividual buscarRelatorioPorId(Long id) {
+        var relatorio = relatorioIndividualRepository.findById(id);
+        return relatorio.orElse(null);
+    }
+
+    public RelatorioIndividualResponseDTO removerRelatorioPorId(Long id) {
+
+        RelatorioIndividual relatorioASerRemovido = buscarRelatorioPorId(id);
+
+        if (relatorioASerRemovido == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é possivel remover, Relatorio de id: " + id + " não cadastrado no banco de dados.");
+        } else {
+            RelatorioIndividualResponseDTO relatorioIndividualResponseDTO = RelatorioIndividualConverter.converterEntidadeParaDTO(relatorioASerRemovido);
+            relatorioIndividualRepository.delete(relatorioASerRemovido);
+            return relatorioIndividualResponseDTO;
+        }
     }
 
     public RelatorioIndividualResponseDTO criarRelatorioIndividual(Long id){
@@ -35,10 +67,19 @@ public class RelatorioService {
         Task taskEncontrada = taskService.buscarTaskPorId(id);
         String statusAtual = taskEncontrada.getStatusTarefa();
 
+        var relatorioExistente = buscarRelatorioPorIdDaTarefa(id);
+
         if (Objects.isNull(taskEncontrada)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Não é possivel gerar relatório, Tarefa de id: " + id + " não cadastrado no banco de dados.");
+        }
+
+        if (Objects.nonNull(relatorioExistente)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é possivel gerar relatório, Já existe um relatório criado para a Tarefa de id: " + id);
+
         }
 
         if (!statusAtual.equals("Finalizado")) {
