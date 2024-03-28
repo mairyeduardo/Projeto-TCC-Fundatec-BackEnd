@@ -19,13 +19,13 @@ public class ClienteController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Cliente>> listarClientes() {
+    public ResponseEntity<List<ClienteResponseDTO>> listarClientes() {
         return ResponseEntity.ok(this.clienteService.buscarCliente());
     }
 
-    @GetMapping("/{nome}")
-    public ResponseEntity<Cliente> buscarClientePorNome(@PathVariable("nome") String nome){
-        return ResponseEntity.ok(this.clienteService.buscarClientePorNome(nome));
+    @GetMapping("/{id}/{nome}")
+    public ResponseEntity<ClienteResponseDTO> buscarClientePorNomeUsandoIDUsuario(@PathVariable("id") Long id, @PathVariable("nome") String nome){
+        return ResponseEntity.ok(this.clienteService.buscarClientePorNomeUtilizandoIdDoUsuario(id, nome));
     }
 
     @DeleteMapping("/{id}")

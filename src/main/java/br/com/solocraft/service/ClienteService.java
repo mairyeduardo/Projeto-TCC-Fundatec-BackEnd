@@ -1,13 +1,16 @@
 package br.com.solocraft.service;
 
 import br.com.solocraft.model.Cliente;
+import br.com.solocraft.model.Task;
 import br.com.solocraft.model.dto.ClienteResponseDTO;
 import br.com.solocraft.model.dto.converter.ClienteConverter;
+import br.com.solocraft.model.dto.converter.TaskConverter;
 import br.com.solocraft.repository.ClienteRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,18 +30,44 @@ public class ClienteService {
         return cliente.orElse(null);
     }
 
-    public Cliente buscarClientePorNome(String nome) {
 
-        //TODO FAZER VALIDACAO SE NOME EXISTE
-//        Cliente cliente =
+
+    public ClienteResponseDTO buscarClientePorNomeUtilizandoIdDoUsuario(Long id, String nome) {
+        var usuarioEncontrado = usuarioService.buscarUsuarioPorId(id);
+        var verificarUsuarioDoCliente = clienteRepository.findByUsuario(usuarioEncontrado);
+
+        if (Objects.isNull(verificarUsuarioDoCliente)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Nenhum cliente encontrado para id de Usuario: " + id + " este usuario pode não cadastrado no banco de dados.");
+        }
+
+        var verificarNomeCliente = clienteRepository.findByNome(nome);
+
+        if (Objects.isNull(verificarNomeCliente)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Nenhum cliente encontrado com o nome: " + nome);
+        }
+
+        return ClienteConverter.converterEntidadeParaDTO(verificarUsuarioDoCliente);
+    }
+
+
+    public Cliente buscarClientePorNome(String nome) {
 
         return clienteRepository.findByNome(nome);
     }
 
-    public List<Cliente> buscarCliente() {
+    public List<ClienteResponseDTO> buscarCliente() {
         List<Cliente> clientes = clienteRepository.findAll();
+        List<ClienteResponseDTO> clienteResponseDTO = new ArrayList<>();
 
-        return clientes;
+        for (Cliente c : clientes) {
+            clienteResponseDTO.add(ClienteConverter.converterEntidadeParaDTO(c));
+        }
+
+        return clienteResponseDTO;
     }
 
     public Cliente buscarClientePorTelefone(String telefone) {
