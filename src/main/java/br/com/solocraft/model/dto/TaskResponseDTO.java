@@ -24,5 +24,6 @@ public class TaskResponseDTO {
     private LocalDate dataFinal = null;
     private String enderecoServico;
     private String statusTarefa;
+    private Long idCliente;
     private String nomeCliente;
 }
