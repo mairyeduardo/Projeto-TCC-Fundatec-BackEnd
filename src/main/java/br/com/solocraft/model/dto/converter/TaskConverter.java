@@ -42,6 +42,7 @@ public class TaskConverter {
         taskResponseDTO.setEnderecoServico(task.getEnderecoServico());
         taskResponseDTO.setStatusTarefa(task.getStatusTarefa());
         taskResponseDTO.setNomeCliente(task.getCliente().getNome());
+        taskResponseDTO.setIdCliente(task.getCliente().getId());
 
         return taskResponseDTO;
     }

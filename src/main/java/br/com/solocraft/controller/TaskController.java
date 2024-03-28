@@ -45,4 +45,14 @@ public class TaskController {
         TaskResponseDTO taskAlterada = taskService.adicionarCusto(id, taskRequestDTO);
         return ResponseEntity.ok(taskAlterada);
     }
+
+    @GetMapping("/cliente/{id}")
+    public ResponseEntity<List<TaskResponseDTO>> buscarTarefaPorIdCliente(@PathVariable("id") Long id){
+        return ResponseEntity.ok(taskService.buscarTaskPorIdDoCliente(id));
+    }
+
+    @GetMapping("/usuario/{id}")
+    public ResponseEntity<List<TaskResponseDTO>> buscarTarefaPorIdUsuario(@PathVariable("id") Long id){
+        return ResponseEntity.ok(taskService.buscarTaskPorIdDoUsuario(id));
+    }
 }
