@@ -28,7 +28,7 @@ public class RelatorioService {
         this.relatorioIndividualRepository = relatorioIndividualRepository;
     }
 
-    public RelatorioIndividualResponseDTO buscarRelatorioPorIdDaTarefa(Long id) {
+    public RelatorioIndividualResponseDTO buscarRelatorioPorIdDaTarefaDTO(Long id) {
         var tarefaEncontrada = taskService.buscarTaskPorId(id);
         var relatorioEncontrado = relatorioIndividualRepository.findByTask(tarefaEncontrada);
 
@@ -37,9 +37,12 @@ public class RelatorioService {
                     HttpStatus.BAD_REQUEST,
                     "Relatório nao encontrado para a tarefa de id: " + id);
         }
-
         return RelatorioIndividualConverter.converterEntidadeParaDTO(relatorioEncontrado);
+    }
 
+    public RelatorioIndividual buscarRelatorioPorIdDaTarefa(Long id) {
+        var tarefaEncontrada = taskService.buscarTaskPorId(id);
+        return relatorioIndividualRepository.findByTask(tarefaEncontrada);
     }
 
     public RelatorioIndividual buscarRelatorioPorId(Long id) {
@@ -65,28 +68,29 @@ public class RelatorioService {
     public RelatorioIndividualResponseDTO criarRelatorioIndividual(Long id){
 
         Task taskEncontrada = taskService.buscarTaskPorId(id);
-        String statusAtual = taskEncontrada.getStatusTarefa();
-
-        var relatorioExistente = buscarRelatorioPorIdDaTarefa(id);
 
         if (Objects.isNull(taskEncontrada)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Não é possivel gerar relatório, Tarefa de id: " + id + " não cadastrado no banco de dados.");
+                    "Não é possivel gerar relatório, Não foi encontrada uma Tarefa de id: " + id);
         }
 
-        if (Objects.nonNull(relatorioExistente)) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Não é possivel gerar relatório, Já existe um relatório criado para a Tarefa de id: " + id);
-
-        }
+        String statusAtual = taskEncontrada.getStatusTarefa();
 
         if (!statusAtual.equals("Finalizado")) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Não é possivel Gerar Relatório de uma tarefa que não está em Finalizada"
             );
+        }
+
+        var relatorioExistente = buscarRelatorioPorIdDaTarefa(id);
+
+        if (Objects.nonNull(relatorioExistente)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Não é possivel gerar relatório, Já existe um relatório criado para a Tarefa de id: " + id);
+
         }
 
         RelatorioIndividual relatorioIndividual = new RelatorioIndividual();

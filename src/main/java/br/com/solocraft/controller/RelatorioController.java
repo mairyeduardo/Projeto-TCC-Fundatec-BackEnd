@@ -33,7 +33,7 @@ public class RelatorioController {
 
     @GetMapping("/tarefa/{id}")
     public ResponseEntity<RelatorioIndividualResponseDTO> buscarRelatorioPorIdTarefa(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(relatorioService.buscarRelatorioPorIdDaTarefa(id));
+        return ResponseEntity.ok(relatorioService.buscarRelatorioPorIdDaTarefaDTO(id));
     }
 
     @DeleteMapping("/{id}")
