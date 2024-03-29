@@ -24,13 +24,12 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}/{nome}")
-    public ResponseEntity<ClienteResponseDTO> buscarClientePorNomeUsandoIDUsuario(@PathVariable("id") Long id, @PathVariable("nome") String nome){
+    public ResponseEntity<List<ClienteResponseDTO>> buscarClientePorNomeUsandoIDUsuario(@PathVariable("id") Long id, @PathVariable("nome") String nome){
         return ResponseEntity.ok(this.clienteService.buscarClientePorNomeUtilizandoIdDoUsuario(id, nome));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ClienteResponseDTO> removerClientePorId(@PathVariable("id") Long id) {
-        ClienteResponseDTO clienteRemovido = clienteService.removerPorId(id);
-        return ResponseEntity.ok(clienteRemovido);
+        return ResponseEntity.ok(this.clienteService.removerPorId(id));
     }
 }

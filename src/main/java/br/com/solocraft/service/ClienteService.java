@@ -3,6 +3,7 @@ package br.com.solocraft.service;
 import br.com.solocraft.model.Cliente;
 import br.com.solocraft.model.Task;
 import br.com.solocraft.model.dto.ClienteResponseDTO;
+import br.com.solocraft.model.dto.TaskResponseDTO;
 import br.com.solocraft.model.dto.converter.ClienteConverter;
 import br.com.solocraft.model.dto.converter.TaskConverter;
 import br.com.solocraft.repository.ClienteRepository;
@@ -32,11 +33,18 @@ public class ClienteService {
 
 
 
-    public ClienteResponseDTO buscarClientePorNomeUtilizandoIdDoUsuario(Long id, String nome) {
+    public List<ClienteResponseDTO> buscarClientePorNomeUtilizandoIdDoUsuario(Long id, String nome) {
         var usuarioEncontrado = usuarioService.buscarUsuarioPorId(id);
-        var verificarUsuarioDoCliente = clienteRepository.findByUsuario(usuarioEncontrado);
+        List<Cliente> verificarSeUsuarioPossuiClientes = clienteRepository.findByUsuario(usuarioEncontrado);
+        List<ClienteResponseDTO> clienteResponseDTO = new ArrayList<>();
 
-        if (Objects.isNull(verificarUsuarioDoCliente)) {
+        if (Objects.isNull(usuarioEncontrado)) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Nenhum usuario de id: " + id + " cadastrado no banco de dados.");
+        }
+
+        if (Objects.isNull(verificarSeUsuarioPossuiClientes)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
                     "Nenhum cliente encontrado para id de Usuario: " + id + " este usuario pode não cadastrado no banco de dados.");
@@ -50,7 +58,16 @@ public class ClienteService {
                     "Nenhum cliente encontrado com o nome: " + nome);
         }
 
-        return ClienteConverter.converterEntidadeParaDTO(verificarUsuarioDoCliente);
+
+        for (Cliente c: verificarSeUsuarioPossuiClientes) {
+
+                if (Objects.equals(c.getNome(), verificarNomeCliente.getNome())) {
+                    clienteResponseDTO.add(ClienteConverter.converterEntidadeParaDTO(c));
+                }
+        }
+
+
+        return clienteResponseDTO;
     }
 
 
