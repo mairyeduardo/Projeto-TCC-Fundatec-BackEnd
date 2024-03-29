@@ -68,17 +68,18 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(email);
     }
 
-    public void cadastrarUsuario(UsuarioRequestDTO usuarioRequestDTO) {
+    public UsuarioResponseDTO cadastrarUsuario(UsuarioRequestDTO usuarioRequestDTO) {
         String verificarEmailUsuarioASerAdicionado = usuarioRequestDTO.getEmail();
         Usuario usuarioExistente = buscarUsuarioPorEmail(verificarEmailUsuarioASerAdicionado);
-        if (usuarioExistente != null) {
+        if (Objects.nonNull(usuarioExistente)) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, ERRO_CRIACAO_EMAIL_EXISTENTE
             );
-        } else {
-            Usuario usuarioEntity = UsuarioConverter.converterDTOParaEntidade(usuarioRequestDTO);
-            usuarioRepository.save(usuarioEntity);
         }
+
+        Usuario usuarioEntity = UsuarioConverter.converterDTOParaEntidade(usuarioRequestDTO);
+        usuarioRepository.save(usuarioEntity);
+        return UsuarioConverter.converterEntidadeParaDTO(usuarioEntity);
     }
 
     public UsuarioResponseDTO removerPorId(Long id) {

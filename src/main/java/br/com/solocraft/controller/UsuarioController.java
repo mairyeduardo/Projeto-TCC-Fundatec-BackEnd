@@ -27,9 +27,8 @@ public class UsuarioController {
     }
 
     @PostMapping("/adicionar")
-    public ResponseEntity<Void> adicionarUsuario(@RequestBody UsuarioRequestDTO usuarioRequestDTO) {
-        usuarioService.cadastrarUsuario(usuarioRequestDTO);
-        return new ResponseEntity<>(null, HttpStatus.CREATED);
+    public ResponseEntity<UsuarioResponseDTO> adicionarUsuario(@RequestBody UsuarioRequestDTO usuarioRequestDTO) {
+        return ResponseEntity.ok(this.usuarioService.cadastrarUsuario(usuarioRequestDTO));
     }
 
     @GetMapping("/email-e-senha/{email}/{senha}")
