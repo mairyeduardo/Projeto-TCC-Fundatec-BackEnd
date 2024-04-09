@@ -94,6 +94,6 @@ Dependenciais atuais do projeto:
 
 #### Rodando Via IDE: 
 
-Execute o arquivo `Application`
+Para rodar o projeto Execute o arquivo `Application`, desta forma o servidor Local do Spring Boot ira subir.
 
 ---
