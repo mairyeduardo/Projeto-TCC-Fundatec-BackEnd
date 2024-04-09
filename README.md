@@ -28,6 +28,8 @@ Facilitando a organização de seus serviços e clientes, lucros e despesas.
 
 ## Como Utilizar? 
 
+Obs: No projeto estou utilizando o `Java 17` e `SpringBoot 3.2.0`
+
 Existem duas formas de utilizar este projeto, Rodando em LocalHost ou consumindo os endpoints que estão alocados em um Servidor, veja abaixo como proceguir em cada etapa:
 
 ### Consumindo Api alocada em Servidor AWS:
