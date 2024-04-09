@@ -1,7 +1,6 @@
 server:
   servlet:
     context-path: /solocraft
-  port: 8081
   error:
     include-message: always
 
