@@ -44,6 +44,8 @@ URL Base da Api: http://3.237.94.2:8081/solocraft/
 
 ### Rodando o projeto em LocalHost:
 
+#### Link do Swagger para localhost: http://localhost:8080/solocraft/swagger-ui/index.html
+
 #### Necessario:
 
 - Possuir `MySQL Community Server` na máquina, aconselhado baixar tambem `MySQL Workbench` para visualizar conexão com Banco.
