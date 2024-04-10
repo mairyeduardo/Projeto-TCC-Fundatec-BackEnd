@@ -40,7 +40,7 @@ Existem duas formas de utilizar este projeto, Rodando em LocalHost ou consumindo
 
 Basta consumir os endpoints da Api, como fazer: 
 
-URL Base da Api: http://3.237.94.2:8081/solocraft/
+URL Base da Api: http://ec2-3-215-135-209.compute-1.amazonaws.com:8080/solocraft/
 
 --- 
 
