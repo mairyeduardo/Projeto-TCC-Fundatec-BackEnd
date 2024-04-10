@@ -34,13 +34,13 @@ Existem duas formas de utilizar este projeto, Rodando em LocalHost ou consumindo
 
 ### Consumindo Api alocada em Servidor AWS ( Prod ):
 
-#### Link do swagger produção: http://ec2-3-215-135-209.compute-1.amazonaws.com:8080/solocraft/swagger-ui/index.html#/
+#### Link do swagger produção: http://44.198.225.29:8080/solocraft/swagger-ui/index.html#/
 
 #### Necessario:
 
 Basta consumir os endpoints da Api, como fazer: 
 
-URL Base da Api: http://ec2-3-215-135-209.compute-1.amazonaws.com:8080/solocraft/
+URL Base da Api: http://44.198.225.29:8080/solocraft/
 
 --- 
 
