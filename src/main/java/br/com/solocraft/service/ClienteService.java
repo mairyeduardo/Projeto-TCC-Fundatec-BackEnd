@@ -31,7 +31,23 @@ public class ClienteService {
         return cliente.orElse(null);
     }
 
+    public List<ClienteResponseDTO> buscarClientePorIdDoUsuario(Long id) {
+        var usuarioEncontrado = usuarioService.buscarUsuarioPorId(id);
+        List<Cliente> clienteEncontrado = clienteRepository.findByUsuario(usuarioEncontrado);
+        List<ClienteResponseDTO> clienteResponseDTO = new ArrayList<>();
 
+        if (clienteEncontrado.isEmpty()){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Clientes nao encontrado para usuario de id: " + id);
+        }
+
+        for (Cliente c: clienteEncontrado) {
+            clienteResponseDTO.add(ClienteConverter.converterEntidadeParaDTO(c));
+        }
+
+        return clienteResponseDTO;
+    }
 
     public List<ClienteResponseDTO> buscarClientePorNomeUtilizandoIdDoUsuario(Long id, String nome) {
         var usuarioEncontrado = usuarioService.buscarUsuarioPorId(id);
