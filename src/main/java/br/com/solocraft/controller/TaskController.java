@@ -66,4 +66,14 @@ public class TaskController {
         return ResponseEntity.ok(taskService.buscarTarefasConcluidasPorIdUsuario(id));
     }
 
+    @GetMapping("/pendente/cliente/{id}")
+    public ResponseEntity<List<TaskResponseDTO>> buscarTarefasPendentesPorIdCliente(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(taskService.buscarTarefasPendentePorIdCliente(id));
+    }
+
+    @GetMapping("/concluida/cliente/{id}")
+    public ResponseEntity<List<TaskResponseDTO>> buscarTarefasConcluidasPorIdCliente(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(taskService.buscarTarefasConcluidasPorIdCliente(id));
+    }
+
 }
