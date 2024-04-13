@@ -115,6 +115,58 @@ public class TaskService {
         return taskResponseDTO;
     }
 
+    public List<TaskResponseDTO> buscarTarefasPendentePorIdCliente(Long id){
+        var clienteEncontrado = clienteService.buscarClientePorId(id);
+        List<Task> taskEncontrado = taskRepository.findByCliente(clienteEncontrado);
+        List<TaskResponseDTO> taskResponseDTO = new ArrayList<>();
+
+        if (taskEncontrado.isEmpty()){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Tarefa nao encontrado para usuario de id: " + id);
+        }
+
+        for (Task t: taskEncontrado) {
+            if (t.getStatusTarefa().equals("Em_Progresso")){
+                taskResponseDTO.add(TaskConverter.converterEntidadeParaDTO(t));
+            }
+        }
+
+        if (taskResponseDTO.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Nenhuma Tarefa pendente encontrado para cliente de id: " + id);
+        }
+
+        return taskResponseDTO;
+    }
+
+    public List<TaskResponseDTO> buscarTarefasConcluidasPorIdCliente(Long id) {
+        var clienteEncontrado = clienteService.buscarClientePorId(id);
+        List<Task> taskEncontrado = taskRepository.findByCliente(clienteEncontrado);
+        List<TaskResponseDTO> taskResponseDTO = new ArrayList<>();
+
+        if (taskEncontrado.isEmpty()){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Tarefa nao encontrado para usuario de id: " + id);
+        }
+
+        for (Task t: taskEncontrado) {
+            if (t.getStatusTarefa().equals("Finalizado")){
+                taskResponseDTO.add(TaskConverter.converterEntidadeParaDTO(t));
+            }
+        }
+
+        if (taskResponseDTO.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Nenhuma Tarefa concluida encontrado para o cliente de id: " + id);
+        }
+
+        return taskResponseDTO;
+    }
+
     public List<TaskResponseDTO> buscarTaskPorIdDoCliente(Long id) {
         var clienteEncontrado = clienteService.buscarClientePorId(id);
         List<Task> taskEncontrado = taskRepository.findByCliente(clienteEncontrado);
