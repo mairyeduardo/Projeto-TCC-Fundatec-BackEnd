@@ -29,7 +29,7 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}/{nome}")
-    public ResponseEntity<List<ClienteResponseDTO>> buscarClientePorNomeUsandoIDUsuario(@PathVariable("id") Long id, @PathVariable("nome") String nome){
+    public ResponseEntity<ClienteResponseDTO> buscarClientePorNomeUsandoIDUsuario(@PathVariable("id") Long id, @PathVariable("nome") String nome){
         return ResponseEntity.ok(this.clienteService.buscarClientePorNomeUtilizandoIdDoUsuario(id, nome));
     }
 

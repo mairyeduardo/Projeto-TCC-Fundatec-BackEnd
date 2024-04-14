@@ -49,10 +49,9 @@ public class ClienteService {
         return clienteResponseDTO;
     }
 
-    public List<ClienteResponseDTO> buscarClientePorNomeUtilizandoIdDoUsuario(Long id, String nome) {
+    public ClienteResponseDTO buscarClientePorNomeUtilizandoIdDoUsuario(Long id, String nome) {
         var usuarioEncontrado = usuarioService.buscarUsuarioPorId(id);
         List<Cliente> verificarSeUsuarioPossuiClientes = clienteRepository.findByUsuario(usuarioEncontrado);
-        List<ClienteResponseDTO> clienteResponseDTO = new ArrayList<>();
 
         if (Objects.isNull(usuarioEncontrado)) {
             throw new ResponseStatusException(
@@ -60,10 +59,10 @@ public class ClienteService {
                     "Nenhum usuario de id: " + id + " cadastrado no banco de dados.");
         }
 
-        if (Objects.isNull(verificarSeUsuarioPossuiClientes)) {
+        if (verificarSeUsuarioPossuiClientes.isEmpty()) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "Nenhum cliente encontrado para id de Usuario: " + id + " este usuario pode não cadastrado no banco de dados.");
+                    "Nenhum cliente encontrado para id de Usuario: " + id);
         }
 
         var verificarNomeCliente = clienteRepository.findByNome(nome);
@@ -74,16 +73,19 @@ public class ClienteService {
                     "Nenhum cliente encontrado com o nome: " + nome);
         }
 
-
         for (Cliente c: verificarSeUsuarioPossuiClientes) {
 
                 if (Objects.equals(c.getNome(), verificarNomeCliente.getNome())) {
-                    clienteResponseDTO.add(ClienteConverter.converterEntidadeParaDTO(c));
+                    return ClienteConverter.converterEntidadeParaDTO(c);
+                } else {
+                    throw new ResponseStatusException(
+                            HttpStatus.BAD_REQUEST,
+                            "Nenhum cliente encontrado com o nome: " + nome + "para este usuario");
                 }
         }
 
 
-        return clienteResponseDTO;
+        return null;
     }
 
 
